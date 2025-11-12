@@ -1,4 +1,5 @@
 include(../cmake/add_simple_library.cmake) # Tooling to build libraries and link them to imgui_bundle
+cmake_minimum_required(VERSION 3.5)
 
 # Add fplus
 add_library(fplus INTERFACE)

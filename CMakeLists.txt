@@ -1,6 +1,14 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.10...3.30)
 project(imgui_bundle VERSION "1.2.1") # Remember to mirror changes to setup.py!
 
+# Allow bundled third-party projects that still request legacy policies (<3.5) to
+# configure successfully with newer CMake releases shipped via pip.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
+
+if(POLICY CMP0169)
+    # FetchContent_Populate is still used by several vendored dependencies (OpenCV, etc.).
+    cmake_policy(SET CMP0169 OLD)
+endif()
 
 # About imgui_bundle_add_app:
 # -----------------------------------------------------------------------------
@@ -54,6 +62,14 @@ if(SKBUILD)
 else()
     option(IMGUI_BUNDLE_BUILD_PYTHON "build python bindings" OFF)
     set(IMGUI_BUNDLE_BUILD_CPP ON)
+endif()
+
+if(SKBUILD)
+    # Skip optional ImmVision + OpenCV when building the Python package to avoid
+    # fetching large dependencies that currently require legacy CMake policies.
+    set(IMGUI_BUNDLE_WITH_IMMVISION OFF CACHE BOOL "" FORCE)
+    set(IMMVISION_FETCH_OPENCV OFF CACHE BOOL "" FORCE)
+    set(IMGUI_BUNDLE_FAIL_IF_IMMVISION_UNAVAILABLE OFF CACHE BOOL "" FORCE)
 endif()
 
 
