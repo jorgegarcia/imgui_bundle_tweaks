@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 3.10...3.30)
-project(imgui_bundle VERSION "1.2.1") # Remember to mirror changes to setup.py!
+
+# Set policies BEFORE project() to apply globally
+set(CMAKE_POLICY_DEFAULT_CMP0079 NEW)
+
+project(imgui_bundle VERSION "1.2.1")
 
 # Allow bundled third-party projects that still request legacy policies (<3.5) to
 # configure successfully with newer CMake releases shipped via pip.
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5 CACHE STRING "" FORCE)
 
 if(POLICY CMP0169)
-    # FetchContent_Populate is still used by several vendored dependencies (OpenCV, etc.).
     cmake_policy(SET CMP0169 OLD)
 endif()
 
